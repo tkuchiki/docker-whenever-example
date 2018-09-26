@@ -51,14 +51,13 @@ set :job_template, "app bash -l -c ':job'"
 set :whenever_command,      ->{ [:bundle, :exec, :whenever, "|", "sudo", "tee", "/etc/cron.d/whenever"] }
 
 namespace :deploy do
-  after :publishing, "whenever:update_crontab"
-#  after :publishing, :whenever
-#
-#  task :whenever do
-#    on roles(:batch), in: :sequence, wait: 5 do
-#      within current_path do
-#        execute :bundle, "exec", "whenever", "|", "sudo", "tee", "/etc/cron.d/whenever"
-#      end
-#    end
-#  end
+  after :publishing, :whenever
+
+  task :whenever do
+    on roles(:batch), in: :sequence, wait: 5 do
+      within release_path do
+        execute :bundle, "exec", "whenever", "--set environment=#{fetch(:stage)}&job_templae=app bash -l -c :job", "|", "sudo", "tee", "/etc/cron.d/whenever"
+      end
+    end
+  end
 end
