@@ -8,4 +8,4 @@ if [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
     ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
 fi
 
-exec "$@"
+exec /sbin/init
